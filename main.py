@@ -2,6 +2,7 @@ import os
 from flask import Flask, send_file
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return send_file('dash.html')
@@ -17,8 +18,6 @@ def agentslist():
                 file_content = file.read()
                 concatenated_content += file_content + ","  
     return concatenated_content[:len(concatenated_content)-1]+']'
-
-
 
 
 @app.route('/<path:path>')
