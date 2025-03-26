@@ -9,22 +9,22 @@ app = Flask(__name__)
 #start a thread for each listener
 #start a thread for the web interface
 
-def load_plugins(plugin_dir):
-    plugins = []
-    for filename in os.listdir(plugin_dir):
+def load_listeners(listener_dir):
+    listeners = []
+    for filename in os.listdir(listener_dir):
         if filename.endswith('.py') and not filename.startswith('_'):
-            module_name = f"{plugin_dir}.{filename[:-3]}"
+            module_name = f"{listener_dir}.{filename[:-3]}"
             try:
                 module = importlib.import_module(module_name)
-                if hasattr(module, 'Plugin'):
-                    plugins.append(module.Plugin())
+                if hasattr(module, 'listener'):
+                    listeners.append(module.listener())
             except ImportError as e:
                 print(f"Failed to load {module_name}: {e}")
-    return plugins
+    return listeners
 
-plugins = load_plugins('plugins')
-for plugin in plugins:
-    plugin.run()
+listeners = load_listeners('modules\\listeners')
+for listener in listeners:
+    listener.run()
 
 
 
