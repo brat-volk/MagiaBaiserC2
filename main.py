@@ -11,7 +11,10 @@ app = Flask(__name__)
 
 def load_listeners(listener_dir):
     listeners = []
-    for filename in os.listdir(listener_dir):
+    listener_dir = listener_dir.replace("\\", ".")
+    listener_dir = listener_dir.rstrip(".")
+    
+    for filename in os.listdir(listener_dir.replace('.', '\\')):
         if filename.endswith('.py') and not filename.startswith('_'):
             module_name = f"{listener_dir}.{filename[:-3]}"
             try:
@@ -21,6 +24,7 @@ def load_listeners(listener_dir):
             except ImportError as e:
                 print(f"Failed to load {module_name}: {e}")
     return listeners
+
 
 listeners = load_listeners('modules\\listeners')
 for listener in listeners:
