@@ -9,26 +9,29 @@ app = Flask(__name__)
 #start a thread for each listener
 #start a thread for the web interface
 
-def load_listeners(listener_dir):
-    listeners = []
-    listener_dir = listener_dir.replace("\\", ".")
-    listener_dir = listener_dir.rstrip(".")
+#should i make an internal API and server for the actual implant registration and management instead of leaving it all in the listeners?
+#maybe i can just set up the logic as an external .py file that i import into the listeners idk
+
+def load_modules(module_dir):
+    modules = []
+    module_dir = module_dir.replace("\\", ".")
+    module_dir = module_dir.rstrip(".")
     
-    for filename in os.listdir(listener_dir.replace('.', '\\')):
+    for filename in os.listdir(module_dir.replace('.', '\\')):
         if filename.endswith('.py') and not filename.startswith('_'):
-            module_name = f"{listener_dir}.{filename[:-3]}"
+            module_name = f"{module_dir}.{filename[:-3]}"
             try:
                 module = importlib.import_module(module_name)
-                if hasattr(module, 'listener'):
-                    listeners.append(module.listener())
+                if hasattr(module, 'module'):
+                    modules.append(module.module())
             except ImportError as e:
                 print(f"Failed to load {module_name}: {e}")
-    return listeners
+    return modules
 
 
-listeners = load_listeners('modules\\listeners')
+listeners = load_modules('modules\\listeners')
 for listener in listeners:
-    listener.run()
+    listener.start()
 
 
 
