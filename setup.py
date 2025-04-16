@@ -13,7 +13,7 @@ cur.execute("CREATE TABLE implants (\
 );")
 
 cur.execute("CREATE TABLE actions (\
-    action_id INT AUTO_INCREMENT PRIMARY KEY ,\
+    id INT AUTO_INCREMENT PRIMARY KEY ,\
     date DATETIME,\
     action_type INT,\
     content VARCHAR(100),\
@@ -23,9 +23,19 @@ cur.execute("CREATE TABLE actions (\
 
 
 cur.execute("CREATE TABLE tasks (\
-    task_id INT AUTO_INCREMENT PRIMARY KEY ,\
+    id INT AUTO_INCREMENT PRIMARY KEY ,\
     author VARCHAR(20),\
     link VARCHAR(50),\
     content VARCHAR(200),\
     tags VARCHAR(30)\
+);")
+
+cur.execute("CREATE TABLE implant_task (\
+    implant_task_id INT PRIMARY KEY ,\
+    implant_id INT ,\
+    task_id INT,\
+    date DATETIME,\
+    executed BOOLEAN,\
+    FOREIGN KEY (implant_id) REFERENCES implants(id),\
+    FOREIGN KEY (task_id) REFERENCES tasks(id)\
 );")
