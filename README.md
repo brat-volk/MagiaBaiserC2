@@ -6,5 +6,14 @@
   <hr>
   <b><h3>🚧Work In Progress🚧</h3></b>
 
+
+COMPLETED FEATURES<br />
+  -simple modular back-end <br />
+  -basic implant (<a href="https://github.com/brat-volk/Schiavo">here</a>) 
+
+PLANNED (cool) FEATURES<br />
+  -centralized community hub for easy deployment of community-developed addons(implants, listeners, etc. etc.) and forum-like discussion <br />
+  -a nice front-end hopefully <br />
+  -easy one-click installer script (native or docker?) <br />
   
 </body>
