@@ -4,7 +4,7 @@ con = sqlite3.connect(".db")
 cur=con.cursor()
 
 cur.execute("CREATE TABLE implants (\
-    id INT AUTO_INCREMENT PRIMARY KEY ,\
+    id INTEGER PRIMARY KEY ,\
     register_date DATETIME,\
     last_seen DATETIME,\
     os VARCHAR(20),\
@@ -13,7 +13,7 @@ cur.execute("CREATE TABLE implants (\
 );")
 
 cur.execute("CREATE TABLE actions (\
-    id INT AUTO_INCREMENT PRIMARY KEY ,\
+    id INTEGER PRIMARY KEY ,\
     date DATETIME,\
     action_type INT,\
     content VARCHAR(100),\
@@ -23,7 +23,7 @@ cur.execute("CREATE TABLE actions (\
 
 
 cur.execute("CREATE TABLE tasks (\
-    id INT AUTO_INCREMENT PRIMARY KEY ,\
+    id INTEGER PRIMARY KEY ,\
     author VARCHAR(20),\
     link VARCHAR(50),\
     content VARCHAR(200),\
@@ -31,7 +31,7 @@ cur.execute("CREATE TABLE tasks (\
 );")
 
 cur.execute("CREATE TABLE implant_task (\
-    implant_task_id INT PRIMARY KEY ,\
+    id INTEGER PRIMARY KEY ,\
     implant_id INT ,\
     task_id INT,\
     date DATETIME,\

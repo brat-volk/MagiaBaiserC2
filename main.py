@@ -1,5 +1,5 @@
-import importlib,os
-from flask import Flask, send_file
+import importlib,os,sqlite3
+from flask import Flask, request, send_file,jsonify
 app = Flask(__name__)
 
 
@@ -11,6 +11,9 @@ app = Flask(__name__)
 
 #should i make an internal API and server for the actual implant registration and management instead of leaving it all in the listeners?
 #maybe i can just set up the logic as an external .py file that i import into the listeners idk
+
+con = sqlite3.connect(".db", check_same_thread=False)
+cur = con.cursor()
 
 def load_modules(module_dir):
     modules = []
@@ -47,17 +50,18 @@ for listener in listeners:
 def index():
     return send_file('dash.html')
 
-@app.route('/agents')
-def agentslist():
-    concatenated_content = "["
-    for filename in os.listdir("agents"):
-        file_path = os.path.join("agents", filename)
-        file_path = os.path.join(file_path, "agent.json")
-        if os.path.isfile(file_path):
-            with open(file_path, 'r', encoding='utf-8') as file:
-                file_content = file.read()
-                concatenated_content += file_content + ","  
-    return concatenated_content[:len(concatenated_content)-1]+']'
+@app.route('/query',  methods=['POST'])
+def query_db():
+    query = request.get_data(as_text=True)
+    print(f"Executing query: {query}")
+    
+    with con:
+        cur.execute(query)
+        if query.strip().lower().startswith('select'):
+            results = cur.fetchall()
+            print(f"Executing query: {results}")
+            return jsonify(results)
+        return jsonify({"status": "success"})
 
 
 @app.route('/<path:path>')

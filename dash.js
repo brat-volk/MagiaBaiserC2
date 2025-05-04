@@ -4,19 +4,19 @@ let agents=[];
 
 
 function refresh() {
-    let reply = httpGet('/agents');
+    let reply = httpPost('/query',"SELECT * FROM implants");
     agents = JSON.parse(reply);
     agentList.innerHTML = '';
-    agents.forEach(agent => agentList.innerHTML+='<li> '+ agent.id + ' - '+ agent.os + ' - ' + agent.domain + ' </li>');
+    agents.forEach(agent => agentList.innerHTML+='<a href=/agent/"'+ agent[0] +'"><button><li> '+ agent + ' </li></button></a>');
 }
 function panic() {
     document.getElementById('body').innerHTML ='PANIC';
 }
-function httpGet(theUrl)
+function httpPost(url,query)
 {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false );
-    xmlHttp.send( null );
+    xmlHttp.open( "POST", url, false );
+    xmlHttp.send(query);
     return xmlHttp.responseText;
 }
 

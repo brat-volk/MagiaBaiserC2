@@ -8,7 +8,8 @@ body {
 
 nav{
     background-color: #2e1a47;
-    height: 15vh;
+    height: 5vh;
+    min-height: 3rem;
     display:flex;
     flex-direction: row;
     align-items: center;
@@ -60,10 +61,11 @@ button:hover{
 
 .container {
     display: inline-block;
-    width: 11%;
+    min-width: 200px;
 }
 
 ul{
+    padding:0px;
     color: white;
     list-style-type: none;
     margin-left:10%;
@@ -73,7 +75,8 @@ ul{
 }
 
 li{
-    padding: 20px 5px;
+    padding: 20px 25px;
+    border: 2px solid #1f1130;
 }
 
 .panic{
