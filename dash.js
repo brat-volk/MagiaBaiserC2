@@ -7,7 +7,7 @@ function refresh() {
     let reply = httpPost('/query',"SELECT * FROM implants");
     agents = JSON.parse(reply);
     agentList.innerHTML = '';
-    agents.forEach(agent => agentList.innerHTML+='<a href=/agent/"'+ agent[0] +'"><button><li> '+ agent + ' </li></button></a>');
+    agents.forEach(agent => agentList.innerHTML+='<a href=/agent/'+ agent[0] +'><button><li> '+ agent + ' </li></button></a>');
 }
 function panic() {
     document.getElementById('body').innerHTML ='PANIC';

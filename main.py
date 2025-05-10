@@ -64,6 +64,18 @@ def query_db():
         return jsonify({"status": "success"})
 
 
+
+@app.route('/agent/<string:id>/')
+def agent(id):
+    with open('agent.html') as f:
+        meow= f.read()
+        miamiao = meow[:-7] + "<div id=\"agent_id\" class=\"invisible\">"+id+"</div></body>"
+    return miamiao
+@app.route('/agent/<string:id>/<path:path>')
+def agent_template(path):
+    return send_file(path)
+
+
 @app.route('/<path:path>')
 def serve(path):
     return send_file(path)
