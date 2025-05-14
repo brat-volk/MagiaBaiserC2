@@ -36,16 +36,6 @@ listeners = load_modules('modules\\listeners')
 for listener in listeners:
     listener.start()
 
-
-
-
-
-
-
-
-
-
-
 @app.route('/')
 def index():
     return send_file('dash.html')
@@ -67,12 +57,14 @@ def query_db():
 
 @app.route('/agent/<string:id>/')
 def agent(id):
-    with open('agent.html') as f:
+    return send_file('agent.html')
+@app.route('/agent/<string:id>/agent.js')
+def agentjs(id):
+    with open('agent.js') as f:
         meow= f.read()
-        miamiao = meow[:-7] + "<div id=\"agent_id\" class=\"invisible\">"+id+"</div></body>"
-    return miamiao
+    return 'var agent_id='+id+';'+meow
 @app.route('/agent/<string:id>/<path:path>')
-def agent_template(path):
+def agent_template(id,path):
     return send_file(path)
 
 
