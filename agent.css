@@ -65,6 +65,16 @@ h1 {
     text-align: center;
 }
 
+.online{
+    padding: 15px;
+    background-color: lightgreen;
+}
+
+.offline{
+    padding: 15px;
+    background-color: lightgreen;
+}
+
 button {
     padding: 10px 20px;
     margin: 5px;

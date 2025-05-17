@@ -45,6 +45,22 @@ h1 {
     margin-bottom: 20px;
     text-align: center;
 }
+.bg{
+    background-image: url("https://a.storyblok.com/f/178900/4094x2894/e9374f674f/gushing-over-magical-girls-magia-baiser-character-art.png");
+    background-size:contain;
+    background-position: right;
+    background-repeat: no-repeat;
+}
+
+.online{
+    padding: 15px;
+    background-color: lightgreen;
+}
+
+.offline{
+    padding: 15px;
+    background-color: lightgreen;
+}
 
 button {
     padding: 10px 20px;
