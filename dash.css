@@ -46,20 +46,21 @@ h1 {
     text-align: center;
 }
 .bg{
-    background-image: url("https://a.storyblok.com/f/178900/4094x2894/e9374f674f/gushing-over-magical-girls-magia-baiser-character-art.png");
+    background-image: url("https://otakuusamagazine.com/wp-content/uploads/2023/08/gushing-magical-girls-cast1-2.png");
     background-size:contain;
     background-position: right;
     background-repeat: no-repeat;
 }
 
 .online{
-    padding: 15px;
+    margin-left: 10%;
+    padding: 5px 15px;
     background-color: lightgreen;
 }
 
 .offline{
-    padding: 15px;
-    background-color: lightgreen;
+    padding: 5px 15px;
+    background-color: red;
 }
 
 button {
@@ -87,12 +88,29 @@ ul{
     margin-left:10%;
     background-color: rgba(0.1,0.1,0.1, 0.2);
     max-width: 60%;
-    min-height: 400px;
+    height: 50vh;
+    overflow-y: overlay;
+    overflow-x: hidden;
+    scrollbar-width:none;
 }
 
 li{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
     padding: 20px 25px;
-    border: 2px solid #1f1130;
+    border: 1px solid #1f1130;
+}
+
+ul button{
+    background-color: rgba(46, 26, 71, 0.1);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: auto;
+}
+ul button:hover{
+    background-color: rgba(31, 17, 48, 0.2);
 }
 
 .panic{

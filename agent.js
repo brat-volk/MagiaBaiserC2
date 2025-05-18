@@ -8,6 +8,13 @@ function loadAgentData(){
     actions.forEach(action => history_box.innerHTML+='<li> '+ action + ' </li>');
 }
 
+function deleteAgent(){
+    httpPost('/query',"DELETE FROM actions WHERE actions.implant_id="+agent_id);
+    httpPost('/query',"DELETE FROM implants WHERE implants.id="+agent_id);
+    httpPost('/query',"DELETE FROM implant_task WHERE implant_task.implant_id="+agent_id);
+    window.location.replace('../../')
+}
+
 function httpPost(url,query)
 {
     var xmlHttp = new XMLHttpRequest();

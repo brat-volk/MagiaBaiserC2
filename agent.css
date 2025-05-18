@@ -16,6 +16,8 @@ body {
     align-items: center;
     width:90%;
     height: 100%;
+    text-shadow: none;
+    font-style: normal;
 }
 nav{
     background-color: #2e1a47;
@@ -72,7 +74,7 @@ h1 {
 
 .offline{
     padding: 15px;
-    background-color: lightgreen;
+    background-color: red;
 }
 
 button {
