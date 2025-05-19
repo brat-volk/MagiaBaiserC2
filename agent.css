@@ -2,6 +2,13 @@
     visibility: hidden;
 }
 
+.bg{
+    background-image: url("https://otakuusamagazine.com/wp-content/uploads/2023/08/gushing-magical-girls-cast1-2.png");
+    background-size:contain;
+    background-position: right;
+    background-repeat: no-repeat;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #3d166d;

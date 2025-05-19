@@ -13,19 +13,46 @@
             ✨ <div class="container"><div class="slidein">&nbsp MagiaBaiser C2 &nbsp</div></div>  ✨
             <img src="navimg.png">
     </nav>
+    <div class="tabcontainer">
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Overview')">Overview</button>
+            <button class="tablinks" onclick="openTab(event, 'Slaves')">Slaves</button>
+            <button class="tablinks" onclick="openTab(event, 'Community')">Community</button>
+            <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+            <div class="filler"></div>
+        </div>
 
-    <h1>
-        Slaves:
-    </h1>
+        <div id="Overview" class="tabcontent">
+            <div class="gauge" style="width: 200px; --rotation:83deg; --color:#fafd3a; --background:white;">
+                <div class="percentage"></div>
+                <div class="mask"></div>
+                <span class="value">46%</span>
+            </div>
+        </div>
 
-    <ul id="agentList">
-        
-    </ul>
+        <div id="Slaves" class="tabcontent">    
+            <h1>
+                Slaves:
+            </h1>
 
-    <button onclick=refresh() class="refresh"> Refresh </button>
+            <ul id="agentList">
+                
+            </ul>        
+            <button onclick=refresh() class="refresh"> Refresh </button>
+        </div>
+
+        <div id="Community" class="tabcontent">
+            <div class="placeholder">nyothing to see here yet :P</div>
+        </div>
+
+        <div id="Settings" class="tabcontent">
+            
+            <div><button onclick=panic() class="panic"> PANIC!!! </button></div>
+        </div>
+    </div>
 
 
-    <div><button onclick=panic() class="panic"> PANIC!!! </button></div>
+
     </div>
     
     <script src="dash.js"></script>
