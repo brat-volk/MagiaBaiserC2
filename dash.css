@@ -227,7 +227,6 @@ ul button:hover{
     bottom: 0;
     right: -1px;
     background-color: var(--background, #aaa);
-    transform:rotate(var(--rotation)); 
     transform-origin: bottom center; 
     transition-duration: 600;
 }

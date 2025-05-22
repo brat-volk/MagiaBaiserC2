@@ -13,17 +13,41 @@
         <div class="supernavcontainer">✨ <div class="container"><div class="slidein">&nbsp MagiaBaiser C2 &nbsp</div></div>  ✨
         <img src="navimg.png"></div>
     </nav>
-    <h1><p id="box"></p></h1>
-    
 
-    <h1>
-        History:
-    </h1>
-    <ul class="history_box" id="history_box">
-        
-    </ul>
-    <button onclick=refresh() class="refresh"> Refresh </button>
 
+    <div class="tabcontainer">
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Overview')">Overview</button>
+            <button class="tablinks" onclick="openTab(event, 'History')">History</button>
+            <button class="tablinks" onclick="openTab(event, 'Tasks')">Tasks</button>
+            <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+            <div class="filler"></div>
+        </div>
+
+        <div id="Overview" class="tabcontent">
+            
+        </div>
+
+        <div id="History" class="tabcontent">    
+            <h1>
+                History:
+            </h1>
+            <ul id="history_box">
+                
+            </ul>
+            <button onclick=loadAgentData() class="refresh"> Refresh </button>
+        </div>
+
+        <div id="Tasks" class="tabcontent">
+            covid19
+            <img src="https://static.toiimg.com/thumb/msid-65335791,width-1070,height-580,imgsize-59707,resizemode-75,overlay-toi_sw,pt-32,y_pad-40/photo.jpg">
+        </div>
+
+        <div id="Settings" class="tabcontent">
+            
+            <div><button onclick=panic() class="panic"> PANIC!!! </button></div>
+        </div>
+    </div>
     
     <button onclick=deleteAgent() class="offline"> DELETE </button>
 

