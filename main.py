@@ -1,4 +1,4 @@
-import importlib,os,sqlite3
+import importlib,os,sqlite3,datetime
 from flask import Flask, request, send_file,jsonify
 app = Flask(__name__)
 
@@ -14,6 +14,7 @@ app = Flask(__name__)
 
 con = sqlite3.connect(".db", check_same_thread=False)
 cur = con.cursor()
+start_time = datetime.datetime.now()
 
 def load_modules(module_dir):
     modules = []
@@ -39,6 +40,11 @@ for listener in listeners:
 @app.route('/')
 def index():
     return send_file('dash.html')
+
+
+@app.route('/uptime',methods=['POST'])
+def uptime():
+    return str(datetime.datetime.now() - start_time)[:-7]
 
 @app.route('/query',  methods=['POST'])
 def query_db():

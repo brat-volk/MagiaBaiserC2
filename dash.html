@@ -17,6 +17,7 @@
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, 'Overview')">Overview</button>
             <button class="tablinks" onclick="openTab(event, 'Slaves')">Slaves</button>
+            <button class="tablinks" onclick="openTab(event, 'Tasks')">Tasks</button>
             <button class="tablinks" onclick="openTab(event, 'Community')">Community</button>
             <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
             <div class="filler"></div>
@@ -30,6 +31,10 @@
                     <span class="value" id="gaugetxt"></span>
                 </div>
             </div>
+            <div class="srvinfocontainer">
+                <h1> Server info:</h1>
+                <p id="uptime">uptime: </p>
+            </div>
         </div>
 
         <div id="Slaves" class="tabcontent">    
@@ -41,6 +46,12 @@
                 
             </ul>        
             <button onclick=refresh() class="refresh"> Refresh </button>
+        </div>
+        
+        <div id="Tasks" class="tabcontent">
+            <ul id="taskList">
+                
+            </ul>
         </div>
 
         <div id="Community" class="tabcontent">
