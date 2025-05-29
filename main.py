@@ -39,7 +39,7 @@ for listener in listeners:
 
 @app.route('/')
 def index():
-    return send_file('dash.html')
+    return send_file('dash/dash.html')
 
 
 @app.route('/uptime',methods=['POST'])
@@ -59,22 +59,29 @@ def query_db():
             return jsonify(results)
         return jsonify({"status": "success"})
 
-
-
 @app.route('/agent/<string:id>/')
 def agent(id):
-    return send_file('agent.html')
+    return send_file('agent/agent.html')
+@app.route('/task/<string:id>/')
+def task(id):
+    return send_file('task/task.html')
+
 @app.route('/agent/<string:id>/agent.js')
 def agentjs(id):
-    with open('agent.js') as f:
+    with open('agent/agent.js') as f:
         meow= f.read()
     return 'var agent_id='+id+';'+meow
-@app.route('/agent/<string:id>/<path:path>')
-def agent_template(id,path):
-    return send_file(path)
+@app.route('/task/<string:id>/task.js')
+def taskjs(id):
+    with open('task/task.js') as f:
+        meow= f.read()
+    return 'var task_id='+id+';'+meow
 
+@app.route('/<path:target>/<string:id>/<path:path>')
+def send_template(target,id,path):
+    return send_file(target +'/'+ path)
 
 @app.route('/<path:path>')
 def serve(path):
-    return send_file(path)
+    return send_file('dash/'+path)
 

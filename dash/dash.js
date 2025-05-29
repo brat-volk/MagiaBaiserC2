@@ -27,13 +27,10 @@ function openTab(evt, tabName) {
 function refresh() {
   let ri = httpPost('/query',"SELECT * FROM implants");
   let rt = httpPost('/query',"SELECT * FROM tasks");
-  let rm = httpPost('/query',"SELECT MAX(tasks.id) FROM tasks");
   let offline=0,uptime=0,total = 0,meow='';
   agents = JSON.parse(ri);
   tasks = JSON.parse(rt);
   let last_task_id =0;
-  last_task_id= JSON.parse(rm);
-  last_task_id++;
   agents.forEach(agent => {
     meow +='<a href=/agent/'+ agent[0] +'><button><li> '+agent[0] + ' - ' + agent[4] + '\\' + agent[5];
     if(Math.abs(new Date() - new Date(agent[2].replace(/-/g,'/')))>30000){
@@ -51,7 +48,8 @@ function refresh() {
   uptime = httpPost('/uptime','');
   document.getElementById('uptime').innerText='uptime: ' + uptime;
   taskList.innerHTML='';
-  tasks.forEach(task => {taskList.innerHTML+='<a href=/task/'+ task[0] +'><button><li> '+task+'</li></button></a>';});
+  tasks.forEach(task => {last_task_id=task[0];taskList.innerHTML+='<a href=/task/'+ task[0] +'><button><li> '+task+'</li></button></a>';});
+  last_task_id++;
   taskList.innerHTML+='<a href=/task/'+ last_task_id +'><button><li style="justify-content: center;"> + </li></button></a>';
 } 
 

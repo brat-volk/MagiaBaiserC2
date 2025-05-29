@@ -1,4 +1,0 @@
-implants(-implant_id-, register_date, last_seen, os, domain, hostname)
-actions(-action_id-, action_type, content, date, implant_id*)
-tasks(-task_id-, author, link, content, tags)
-implant_task()
