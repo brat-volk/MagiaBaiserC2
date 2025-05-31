@@ -17,12 +17,13 @@
 
     <div class="tabcontainer">
         <div class="code-editor">
-            <div class="line-numbers"></div>
-            <div class="code-area" contenteditable="true"></div>
+            <div class="toolbar">
+                <button onclick=save()> Save </button>
+                <button onclick=deleteTask()> Delete </button>
+            </div>
+            <pre class="code-area" contenteditable="true" id="code"></pre>
         </div>
     </div>
-    
-    <button onclick=deleteAgent() class="offline"> DELETE </button>
 
     </div>
     <script src="task.js"></script>

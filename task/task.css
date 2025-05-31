@@ -166,8 +166,7 @@ ul button:hover{
     color:white;
     border: 1px solid #ccc;
 }
-/* Code Editor Styles */
-/* Code Editor Styles */
+
 .code-editor {
     position: relative;
     height: 100%;
@@ -177,20 +176,6 @@ ul button:hover{
     font-family: 'Courier New', monospace;
     font-size: 14px;
     color: #ffffff;
-}
-
-.line-numbers {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 40px;
-    padding: 10px;
-    text-align: right;
-    color: rgba(255, 255, 255, 0.5);
-    user-select: none;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .code-area {
@@ -204,8 +189,17 @@ ul button:hover{
     tab-size: 4;
 }
 
-/* Syntax highlighting */
-.keyword { color: #569cd6; }
-.string { color: #ce9178; }
-.comment { color: #6a9955; }
-.function { color: #dcdcaa; }
+.toolbar{
+    display: flex;
+    flex-direction: row;
+    height: 5%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.toolbar button{
+    width: 100%;
+    background-color: transparent;
+}
+.toolbar button:hover{
+    background-color: rgba(0, 0, 0, 0.1);;
+}

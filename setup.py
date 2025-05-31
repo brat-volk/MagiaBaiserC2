@@ -26,7 +26,7 @@ cur.execute("CREATE TABLE tasks (\
     id INTEGER PRIMARY KEY ,\
     author VARCHAR(20),\
     link VARCHAR(50),\
-    content VARCHAR(200),\
+    content VARCHAR(500),\
     tags VARCHAR(30)\
 );")
 
