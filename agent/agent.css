@@ -210,3 +210,9 @@ ul button:hover{
     overflow-y: overlay;
     scrollbar-width: none;
 }
+.executed{
+    background-color: rgba(255, 255, 255, 0.6);
+}
+li button{
+    width:auto;
+}

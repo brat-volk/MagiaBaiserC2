@@ -10,6 +10,7 @@ function httpPost(url,query)
 
 function deleteTask(){
   httpPost('/query',"DELETE FROM tasks WHERE tasks.id="+task_id);
+  httpPost('/query',"DELETE FROM implant_task WHERE implant_task.task_id="+task_id);
   window.location.replace('../../')
 }
 

@@ -29,21 +29,28 @@ function loadHistory(){
 }
 
 function loadTasks(){
-  let r1 = httpPost('/query',"SELECT tasks.* FROM tasks, implant_task WHERE implant_task.task_id = tasks.id AND implant_task.implant_id="+agent_id+" ORDER BY implant_task.date");
+  let r1 = httpPost('/query',"SELECT tasks.*, implant_task.id, implant_task.executed FROM tasks, implant_task WHERE implant_task.task_id = tasks.id AND implant_task.implant_id="+agent_id+" ORDER BY implant_task.id");
   implant_tasks = JSON.parse(r1);
   task_box = document.getElementById('task_box');
   task_box.innerHTML = ''; 
-  implant_tasks.forEach(task => task_box.innerHTML+='<li> '+ task + ' </li>');
-  task_box.innerHTML+='<li><select id="new_task">';
+  implant_tasks.forEach(task => task_box.innerHTML+='<li'+(task[6]?' class="executed">':'>')+ task + '<button onclick="deleteTask('+task[5]+')" class="offline">-</button></li>');
+  var tmp='<li><select id="new_task">';
   let r2 = httpPost('/query',"SELECT * FROM tasks ORDER BY tasks.id ASC");
   tasks = JSON.parse(r2);
-  tasks.forEach(task => task_box.innerHTML+='<option id="'+ task[0] + '">"'+task[0]+' </option>');
-  task_box.innerHTML+='</select><button onlick=addTask()>+</button></li>';
+  tasks.forEach(task => tmp+='<option id="'+ task[0] + '">'+task[0]+' </option>');
+  tmp+='</select><button onclick=addTask()>+</button></li>';
+  task_box.innerHTML+=tmp;
 }
 
 function addTask(){
   var meow = document.getElementById("new_task").value;
-  httpPost('/query',"INSERT INTO implant_task (id, implant_id, task_id, date, executed) VALUES (" + task_id + ",'LOCAL','LOCAL','"+code_block.innerText+"','meow')");
+  var time = httpPost('/time','');
+  httpPost('/query',"INSERT INTO implant_task (implant_id, task_id, date, executed) VALUES (" + agent_id + ","+meow+",'"+time+"',0)");
+  loadTasks();
+}
+function deleteTask(id){
+  httpPost('/query',"DELETE FROM implant_task WHERE implant_task.id="+id);
+  loadTasks();
 }
 
 function deleteAgent(){

@@ -46,6 +46,10 @@ def index():
 def uptime():
     return str(datetime.datetime.now() - start_time)[:-7]
 
+@app.route('/time',methods=['POST'])
+def time():
+    return str(datetime.datetime.now())
+
 @app.route('/query',  methods=['POST'])
 def query_db():
     query = request.get_data(as_text=True)
@@ -84,4 +88,3 @@ def send_template(target,id,path):
 @app.route('/<path:path>')
 def serve(path):
     return send_file('dash/'+path)
-

