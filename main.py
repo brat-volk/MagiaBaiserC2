@@ -18,10 +18,10 @@ start_time = datetime.datetime.now()
 
 def load_modules(module_dir):
     modules = []
-    module_dir = module_dir.replace("\\", ".")
+    module_dir = module_dir.replace("/", ".")
     module_dir = module_dir.rstrip(".")
     
-    for filename in os.listdir(module_dir.replace('.', '\\')):
+    for filename in os.listdir(module_dir.replace('.', '/')):
         if filename.endswith('.py') and not filename.startswith('_'):
             module_name = f"{module_dir}.{filename[:-3]}"
             try:
@@ -33,7 +33,7 @@ def load_modules(module_dir):
     return modules
 
 
-listeners = load_modules('modules\\listeners')
+listeners = load_modules('modules/listeners')
 for listener in listeners:
     listener.start()
 
